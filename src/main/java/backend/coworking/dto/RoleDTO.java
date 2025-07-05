@@ -1,22 +1,22 @@
-package backend.coworking.entity;
+package backend.coworking.dto;
 
-import jakarta.persistence.*;
+import backend.coworking.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Entity
-@Table(name = "role")
-public class Role implements GrantedAuthority {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class RoleDTO {
     @EqualsAndHashCode.Include
     private Long id;
     private String authority;
+
+    public RoleDTO (Role role) {
+        this.id = role.getId();
+        this.authority = role.getAuthority();
+    }
 }

@@ -20,8 +20,8 @@ public class Reserva {
     private Instant saida;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profissional_id", nullable = false)
-    private Profissional profissional;
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "espaco_id", nullable = false)
