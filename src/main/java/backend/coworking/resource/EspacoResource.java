@@ -1,22 +1,110 @@
 package backend.coworking.resource;
 
 import backend.coworking.dto.EspacoDTO;
+import backend.coworking.service.EspacoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/espaco")
 public class EspacoResource {
-    public ResponseEntity<Page<EspacoDTO>> findAll(Pageable pageable) {return null;}
 
-    public ResponseEntity<EspacoDTO> findById(Long id) {return null;}
+    @Autowired
+    private EspacoService espacoService;
 
-    public ResponseEntity<EspacoDTO> insert (EspacoDTO dto) {return null;}
+    @GetMapping
+    @Operation(
+            description = "Retorna todos os espaços de forma paginada",
+            summary = "Retorna todos os espaços",
+            responses = {
+                    @ApiResponse(description = "OK", responseCode = "200"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401")
+            }
+    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
+    public ResponseEntity<Page<EspacoDTO>> findAll(Pageable pageable) {
+        Page<EspacoDTO> page = espacoService.findAll(pageable);
+        return ResponseEntity.ok().body(page);
+    }
 
-    public ResponseEntity<EspacoDTO> update (Long id, EspacoDTO dto) {return null;}
+    @GetMapping(value = "/{id}")
+    @Operation(
+            description = "Retorna um único espaço baseado em seu ID",
+            summary = "Retorna um espaço por ID",
+            responses = {
+                    @ApiResponse(description = "OK", responseCode = "200"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Not found", responseCode = "404")
+            }
+    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
+    public ResponseEntity<EspacoDTO> findById(@PathVariable Long id) {
+        EspacoDTO dto = espacoService.findById(id);
+        return ResponseEntity.ok().body(dto);
+    }
 
-    public ResponseEntity<Void> delete(Long id) {return null;}
+    @PostMapping
+    @Operation(
+            description = "Cria um novo espaço no banco de dados",
+            summary = "Cria um novo espaço",
+            responses = {
+                    @ApiResponse(description = "Created", responseCode = "201"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403")
+            }
+    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<EspacoDTO> insert(@Valid @RequestBody EspacoDTO dto) {
+        dto = espacoService.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
+    }
+
+    @PutMapping(value = "/{id}")
+    @Operation(
+            description = "Atualiza os dados de um espaço com base em seu ID",
+            summary = "Atualiza um espaço",
+            responses = {
+                    @ApiResponse(description = "OK", responseCode = "200"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403"),
+                    @ApiResponse(description = "Not found", responseCode = "404")
+            }
+    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<EspacoDTO> update(@PathVariable Long id, @Valid @RequestBody EspacoDTO dto) {
+        dto = espacoService.update(id, dto);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @Operation(
+            description = "Deleta um espaço do banco de dados baseado em seu ID",
+            summary = "Deleta um espaço",
+            responses = {
+                    @ApiResponse(description = "OK", responseCode = "200"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403"),
+                    @ApiResponse(description = "Not found", responseCode = "404")
+            }
+    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        espacoService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
