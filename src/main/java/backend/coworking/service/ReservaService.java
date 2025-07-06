@@ -1,7 +1,8 @@
 package backend.coworking.service;
 
+import backend.coworking.dto.CancelamentoReservaDTO;
 import backend.coworking.dto.ReservaDTO;
-import backend.coworking.dto.ReservaInsertDTO;
+import backend.coworking.dto.insert.ReservaInsertDTO;
 import backend.coworking.entity.Espaco;
 import backend.coworking.entity.Reserva;
 import backend.coworking.entity.Servico;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -97,6 +99,22 @@ public class ReservaService {
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Violação de integridade: " + e.getMessage());
         }
+    }
+
+    @Transactional
+    public int cancelarReservasPorPeriodo (CancelamentoReservaDTO dto) {
+        return reservaRepository.deleteByPeriodo(dto.getInicio(), dto.getFim());
+
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ReservaDTO> findByUsuarioLogado (Pageable pageable) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepository.findByEmail(username).orElseThrow(() -> new ResourceNotFound("Usuário não encontrado."));
+        Page<Reserva> page = reservaRepository.findByUsuarioId(usuario.getId(), pageable);
+        return page.map(
+            r -> new ReservaDTO(r).add(linkTo(methodOn(ReservaResource.class).findById(r.getId())).withSelfRel())
+        );
     }
 
     private void copyDtoToEntity(ReservaInsertDTO dto, Reserva entity) {

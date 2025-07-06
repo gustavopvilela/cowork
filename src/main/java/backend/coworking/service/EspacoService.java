@@ -1,5 +1,6 @@
 package backend.coworking.service;
 
+import backend.coworking.constant.EspacoType;
 import backend.coworking.dto.EspacoDTO;
 import backend.coworking.entity.Espaco;
 import backend.coworking.exception.DatabaseException;
@@ -14,6 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -85,10 +90,21 @@ public class EspacoService {
             throw new DatabaseException("Violação de integridade: " + ex.getMessage());
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<EspacoDTO> findEspacosDisponiveis (Instant inicio, Instant fim, EspacoType tipo, Integer capacidade) {
+        List<Espaco> espacos = espacoRepository.findEspacosDisponiveis(inicio, fim, tipo, capacidade);
+        return espacos
+                .stream()
+                .map(e -> new EspacoDTO(e)
+                        .add(linkTo(methodOn(EspacoResource.class).findById(e.getId())).withSelfRel()))
+                .collect(Collectors.toList());
+    }
     
     private void copiarDtoParaEntidade (EspacoDTO dto, Espaco entity) {
         entity.setNome(dto.getNome());
         entity.setDescricao(dto.getDescricao());
+        entity.setCapacidade(dto.getCapacidade());
         entity.setTipo(dto.getTipo());
     }
 }

@@ -1,4 +1,4 @@
-package backend.coworking.dto;
+package backend.coworking.dto.insert;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

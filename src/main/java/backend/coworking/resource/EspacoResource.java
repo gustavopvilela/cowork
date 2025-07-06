@@ -1,5 +1,6 @@
 package backend.coworking.resource;
 
+import backend.coworking.constant.EspacoType;
 import backend.coworking.dto.EspacoDTO;
 import backend.coworking.service.EspacoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,12 +9,15 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.Instant;
+import java.util.List;
 
 @RestController
 @RequestMapping("/espaco")
@@ -106,5 +110,26 @@ public class EspacoResource {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         espacoService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/disponibilidade")
+    @Operation(
+        summary = "Busca espaços disponíveis",
+        description = "Retorna uma lista de espaços que estão livres em um determinado período de tempo",
+        responses = {
+            @ApiResponse(description = "OK", responseCode = "200"),
+            @ApiResponse(description = "Bad Request", responseCode = "400"),
+            @ApiResponse(description = "Unauthorized", responseCode = "401")
+        }
+    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
+    public ResponseEntity<List<EspacoDTO>> findDisponibilidade (
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim,
+        @RequestParam(required = false) EspacoType tipo,
+        @RequestParam(required = false) Integer capacidade
+    ) {
+        List<EspacoDTO> list = espacoService.findEspacosDisponiveis(inicio, fim, tipo, capacidade);
+        return ResponseEntity.ok().body(list);
     }
 }

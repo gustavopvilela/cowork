@@ -1,7 +1,8 @@
 package backend.coworking.resource;
 
+import backend.coworking.dto.CancelamentoReservaDTO;
 import backend.coworking.dto.ReservaDTO;
-import backend.coworking.dto.ReservaInsertDTO;
+import backend.coworking.dto.insert.ReservaInsertDTO;
 import backend.coworking.service.ReservaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/reserva")
@@ -109,5 +111,30 @@ public class ReservaResource {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reservaService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
+    public ResponseEntity<Page<ReservaDTO>> encontrarMinhasReservas (Pageable pageable) {
+        Page<ReservaDTO> page = reservaService.findByUsuarioLogado(pageable);
+        return ResponseEntity.ok().body(page);
+    }
+
+    @PostMapping("/cancelar-por-periodo")
+    @Operation(
+        summary = "Cancela reservas em lote",
+        description = "Cancela todas as reservas dentro de um período específico",
+        responses = {
+            @ApiResponse(description = "OK", responseCode = "200"),
+            @ApiResponse(description = "Unauthorized", responseCode = "401")
+        }
+    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+    public ResponseEntity<Map<String, Object>> cancelarPorPeriodo (@RequestBody CancelamentoReservaDTO dto) {
+        int totalCancelado = reservaService.cancelarReservasPorPeriodo(dto);
+        return ResponseEntity.ok().body(Map.of(
+            "total_reservas_canceladas", totalCancelado,
+            "motivo", dto.getMotivo()
+        ));
     }
 }

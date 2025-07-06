@@ -1,5 +1,6 @@
-package backend.coworking.dto;
+package backend.coworking.dto.insert;
 
+import backend.coworking.dto.UsuarioDTO;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;

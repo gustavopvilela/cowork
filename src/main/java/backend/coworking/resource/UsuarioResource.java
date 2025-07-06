@@ -1,7 +1,7 @@
 package backend.coworking.resource;
 
 import backend.coworking.dto.UsuarioDTO;
-import backend.coworking.dto.UsuarioInsertDTO;
+import backend.coworking.dto.insert.UsuarioInsertDTO;
 import backend.coworking.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -128,5 +128,19 @@ public class UsuarioResource {
         return ResponseEntity.noContent().build();
     }
 
-
+    @GetMapping(value = "/me", produces = "application/json")
+    @Operation(
+        summary = "Retorna o usuário autenticado",
+        description = "A partir do username (email) do usuário que está autenticado, seus dados são retornados para visualização",
+        responses = {
+            @ApiResponse(description = "OK", responseCode = "200"),
+            @ApiResponse(description = "Unauthorized", responseCode = "401"),
+            @ApiResponse(description = "Not Found", responseCode = "404")
+        }
+    )
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
+    public ResponseEntity<UsuarioDTO> getMe () {
+        UsuarioDTO usuario = usuarioService.getMe();
+        return ResponseEntity.ok().body(usuario);
+    }
 }

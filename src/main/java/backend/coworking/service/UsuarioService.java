@@ -1,7 +1,7 @@
 package backend.coworking.service;
 
 import backend.coworking.dto.UsuarioDTO;
-import backend.coworking.dto.UsuarioInsertDTO;
+import backend.coworking.dto.insert.UsuarioInsertDTO;
 import backend.coworking.dto.RoleDTO;
 import backend.coworking.entity.Usuario;
 import backend.coworking.entity.Role;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -132,6 +133,12 @@ public class UsuarioService implements UserDetailsService {
         }
 
         return usuario;
+    }
+
+    @Transactional(readOnly = true)
+    public UsuarioDTO getMe () {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return findByEmail(username);
     }
     
     private void copiarDTOParaEntidade (UsuarioDTO dto, Usuario entity) {

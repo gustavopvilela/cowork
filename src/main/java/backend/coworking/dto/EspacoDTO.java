@@ -18,6 +18,7 @@ public class EspacoDTO extends RepresentationModel<EspacoDTO> {
     private Long id;
     private String nome;
     private String descricao;
+    private Integer capacidade;
     @Enumerated(EnumType.STRING)
     private EspacoType tipo;
 
@@ -25,6 +26,7 @@ public class EspacoDTO extends RepresentationModel<EspacoDTO> {
         this.id = entity.getId();
         this.nome = entity.getNome();
         this.descricao = entity.getDescricao();
+        this.capacidade = entity.getCapacidade();
         this.tipo = entity.getTipo();
     }
 }
