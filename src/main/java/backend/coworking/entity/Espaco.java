@@ -23,6 +23,7 @@ public class Espaco {
     private Long id;
     private String nome;
     private String descricao;
+    private Integer capacidade;
 
     @Enumerated(EnumType.STRING)
     private EspacoType tipo;
