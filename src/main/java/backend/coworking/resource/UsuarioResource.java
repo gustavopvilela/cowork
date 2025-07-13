@@ -5,6 +5,8 @@ import backend.coworking.dto.insert.UsuarioInsertDTO;
 import backend.coworking.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/usuario")
+@Tag(name = "Usuário", description = "Controller para os usuários do sistema")
 public class UsuarioResource {
     @Autowired
     private UsuarioService usuarioService;
@@ -28,8 +31,10 @@ public class UsuarioResource {
             summary = "Retorna todos os usuários",
             responses = {
                     @ApiResponse(description = "OK", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401")
-            }
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403")
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Page<UsuarioDTO>> findAll (Pageable pageable) {
@@ -44,8 +49,10 @@ public class UsuarioResource {
             responses = {
                     @ApiResponse(description = "OK", responseCode = "200"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<UsuarioDTO> findById (@PathVariable Long id) {
@@ -59,7 +66,6 @@ public class UsuarioResource {
             summary = "Retorna um usuário",
             responses = {
                     @ApiResponse(description = "OK", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Not found", responseCode = "404")
             }
     )
@@ -77,7 +83,8 @@ public class UsuarioResource {
                     @ApiResponse(description = "Bad Request", responseCode = "400"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<UsuarioDTO> insert (@Valid @RequestBody UsuarioInsertDTO dto) {
@@ -102,9 +109,10 @@ public class UsuarioResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
+    @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<UsuarioDTO> update (@PathVariable Long id, @Valid @RequestBody UsuarioInsertDTO dto) {
         UsuarioDTO usuario = usuarioService.update(id, dto);
         return ResponseEntity.ok().body(usuario);
@@ -120,7 +128,8 @@ public class UsuarioResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize(value = "hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> delete (@PathVariable Long id) {
@@ -135,8 +144,10 @@ public class UsuarioResource {
         responses = {
             @ApiResponse(description = "OK", responseCode = "200"),
             @ApiResponse(description = "Unauthorized", responseCode = "401"),
+            @ApiResponse(description = "Forbidden", responseCode = "403"),
             @ApiResponse(description = "Not Found", responseCode = "404")
-        }
+        },
+        security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<UsuarioDTO> getMe () {

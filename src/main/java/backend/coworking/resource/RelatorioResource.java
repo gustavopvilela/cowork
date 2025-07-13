@@ -4,6 +4,8 @@ import backend.coworking.dto.ServicoRankingDTO;
 import backend.coworking.service.RelatorioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +19,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/relatorio")
-@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+@Tag(name = "Relatórios", description = "Controller para relatórios de administração")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')") /* Desta forma, todos os endpoints só podem ser acessados por um admin */
 public class RelatorioResource {
     @Autowired
     private RelatorioService relatorioService;
@@ -30,7 +33,8 @@ public class RelatorioResource {
                     @ApiResponse(description = "OK", responseCode = "200"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     public ResponseEntity<Map<String, Double>> getTaxaOcupacao (
             @RequestParam int ano,
@@ -48,7 +52,8 @@ public class RelatorioResource {
                     @ApiResponse(description = "OK", responseCode = "200"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     public ResponseEntity<List<ServicoRankingDTO>> getTopServicos () {
         List<ServicoRankingDTO> ranking = relatorioService.getTopServicosMaisUsados();

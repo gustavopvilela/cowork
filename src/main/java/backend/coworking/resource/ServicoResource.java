@@ -4,6 +4,8 @@ import backend.coworking.dto.ServicoDTO;
 import backend.coworking.service.ServicoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/servico")
+@Tag(name = "Serviço", description = "Controller para os serviços oferecidos para os espaços de coworking")
 public class ServicoResource {
 
     @Autowired
@@ -27,11 +30,9 @@ public class ServicoResource {
             description = "Retorna todos os serviços de forma paginada",
             summary = "Retorna todos os serviços",
             responses = {
-                    @ApiResponse(description = "OK", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401")
+                    @ApiResponse(description = "OK", responseCode = "200")
             }
     )
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<Page<ServicoDTO>> findAll(Pageable pageable) {
         Page<ServicoDTO> page = servicoService.findAll(pageable);
         return ResponseEntity.ok().body(page);
@@ -44,8 +45,10 @@ public class ServicoResource {
             responses = {
                     @ApiResponse(description = "OK", responseCode = "200"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<ServicoDTO> findById(@PathVariable Long id) {
@@ -62,7 +65,8 @@ public class ServicoResource {
                     @ApiResponse(description = "Bad Request", responseCode = "400"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<ServicoDTO> insert(@Valid @RequestBody ServicoDTO dto) {
@@ -82,7 +86,8 @@ public class ServicoResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<ServicoDTO> update(@PathVariable Long id, @Valid @RequestBody ServicoDTO dto) {
@@ -100,7 +105,8 @@ public class ServicoResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

@@ -6,6 +6,8 @@ import backend.coworking.dto.insert.ReservaInsertDTO;
 import backend.coworking.service.ReservaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/reserva")
+@Tag(name = "Reserva", description = "Controller para reservas")
 public class ReservaResource {
 
     @Autowired
@@ -33,7 +36,8 @@ public class ReservaResource {
                     @ApiResponse(description = "OK", responseCode = "200"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Page<ReservaDTO>> findAll(Pageable pageable) {
@@ -50,7 +54,8 @@ public class ReservaResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<ReservaDTO> findById(@PathVariable Long id) {
@@ -67,7 +72,8 @@ public class ReservaResource {
                     @ApiResponse(description = "Bad Request", responseCode = "400"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<ReservaDTO> insert(@Valid @RequestBody ReservaInsertDTO dto) {
@@ -87,7 +93,8 @@ public class ReservaResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<ReservaDTO> update(@PathVariable Long id, @Valid @RequestBody ReservaInsertDTO dto) {
@@ -105,7 +112,8 @@ public class ReservaResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -114,6 +122,17 @@ public class ReservaResource {
     }
 
     @GetMapping("/me")
+    @Operation(
+        summary = "Retorna as reservas do usuário logado",
+        description = "Tendo os dados do usuário logado, retorna todas as suas reservas",
+        responses = {
+                @ApiResponse(description = "OK", responseCode = "200"),
+                @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                @ApiResponse(description = "Forbidden", responseCode = "403"),
+                @ApiResponse(description = "Not Found", responseCode = "404")
+        },
+        security = @SecurityRequirement(name = "bearerAuth")
+    )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<Page<ReservaDTO>> encontrarMinhasReservas (Pageable pageable) {
         Page<ReservaDTO> page = reservaService.findByUsuarioLogado(pageable);
@@ -126,8 +145,10 @@ public class ReservaResource {
         description = "Cancela todas as reservas dentro de um período específico",
         responses = {
             @ApiResponse(description = "OK", responseCode = "200"),
-            @ApiResponse(description = "Unauthorized", responseCode = "401")
-        }
+            @ApiResponse(description = "Unauthorized", responseCode = "401"),
+            @ApiResponse(description = "Forbidden", responseCode = "403")
+        },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Map<String, Object>> cancelarPorPeriodo (@RequestBody CancelamentoReservaDTO dto) {
