@@ -131,10 +131,10 @@ public class EspacoResource {
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<List<EspacoDTO>> findDisponibilidade (
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim,
-        @RequestParam(required = false) EspacoType tipo,
-        @RequestParam(required = false) Integer capacidade
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim,
+            @RequestParam(required = false) EspacoType tipo,
+            @RequestParam(required = false) Integer capacidade
     ) {
         List<EspacoDTO> list = espacoService.findEspacosDisponiveis(inicio, fim, tipo, capacidade);
         return ResponseEntity.ok().body(list);

@@ -90,14 +90,14 @@ public class AvaliacaoResource {
 
     @GetMapping("/espaco/{id}/avaliacoes")
     @Operation(
-        summary = "Busca as avaliações de um espaço específico",
-        description = "Encontra todas as avaliações de reservas feitas em um determinado espaço",
-        responses = {
-            @ApiResponse(description = "OK", responseCode = "200"),
-            @ApiResponse(description = "Unauthorized", responseCode = "401"),
-            @ApiResponse(description = "Forbidden", responseCode = "403"),
-            @ApiResponse(description = "Not Found", responseCode = "404")
-        }
+            summary = "Busca as avaliações de um espaço específico",
+            description = "Encontra todas as avaliações de reservas feitas em um determinado espaço",
+            responses = {
+                    @ApiResponse(description = "OK", responseCode = "200"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403"),
+                    @ApiResponse(description = "Not Found", responseCode = "404")
+            }
     )
     public ResponseEntity<Page<AvaliacaoDTO>> findByEspaco (@PathVariable Long id, Pageable pageable) {
         Page<AvaliacaoDTO> page = avaliacaoService.findByEspaco(id, pageable);

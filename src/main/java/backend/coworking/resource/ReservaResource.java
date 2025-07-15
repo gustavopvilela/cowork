@@ -154,8 +154,8 @@ public class ReservaResource {
     public ResponseEntity<Map<String, Object>> cancelarPorPeriodo (@RequestBody CancelamentoReservaDTO dto) {
         int totalCancelado = reservaService.cancelarReservasPorPeriodo(dto);
         return ResponseEntity.ok().body(Map.of(
-            "total_reservas_canceladas", totalCancelado,
-            "motivo", dto.getMotivo()
+                "total_reservas_canceladas", totalCancelado,
+                "motivo", dto.getMotivo()
         ));
     }
 }
