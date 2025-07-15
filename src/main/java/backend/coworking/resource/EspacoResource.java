@@ -5,6 +5,8 @@ import backend.coworking.dto.EspacoDTO;
 import backend.coworking.service.EspacoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/espaco")
+@Tag(name = "Espaço", description = "Controller para espaços de coworking")
 public class EspacoResource {
 
     @Autowired
@@ -35,7 +38,6 @@ public class EspacoResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401")
             }
     )
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<Page<EspacoDTO>> findAll(Pageable pageable) {
         Page<EspacoDTO> page = espacoService.findAll(pageable);
         return ResponseEntity.ok().body(page);
@@ -49,7 +51,8 @@ public class EspacoResource {
                     @ApiResponse(description = "OK", responseCode = "200"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<EspacoDTO> findById(@PathVariable Long id) {
@@ -66,7 +69,8 @@ public class EspacoResource {
                     @ApiResponse(description = "Bad Request", responseCode = "400"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<EspacoDTO> insert(@Valid @RequestBody EspacoDTO dto) {
@@ -86,7 +90,8 @@ public class EspacoResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<EspacoDTO> update(@PathVariable Long id, @Valid @RequestBody EspacoDTO dto) {
@@ -104,7 +109,8 @@ public class EspacoResource {
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
                     @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
-            }
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -114,20 +120,21 @@ public class EspacoResource {
 
     @GetMapping("/disponibilidade")
     @Operation(
-        summary = "Busca espaços disponíveis",
-        description = "Retorna uma lista de espaços que estão livres em um determinado período de tempo",
-        responses = {
-            @ApiResponse(description = "OK", responseCode = "200"),
-            @ApiResponse(description = "Bad Request", responseCode = "400"),
-            @ApiResponse(description = "Unauthorized", responseCode = "401")
-        }
+            summary = "Busca espaços disponíveis",
+            description = "Retorna uma lista de espaços que estão livres em um determinado período de tempo",
+            responses = {
+                    @ApiResponse(description = "OK", responseCode = "200"),
+                    @ApiResponse(description = "Bad Request", responseCode = "400"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401")
+            },
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<List<EspacoDTO>> findDisponibilidade (
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim,
-        @RequestParam(required = false) EspacoType tipo,
-        @RequestParam(required = false) Integer capacidade
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant fim,
+            @RequestParam(required = false) EspacoType tipo,
+            @RequestParam(required = false) Integer capacidade
     ) {
         List<EspacoDTO> list = espacoService.findEspacosDisponiveis(inicio, fim, tipo, capacidade);
         return ResponseEntity.ok().body(list);
