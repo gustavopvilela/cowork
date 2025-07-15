@@ -20,7 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/relatorio")
 @Tag(name = "Relatórios", description = "Controller para relatórios de administração")
-@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')") /* Desta forma, todos os endpoints só podem ser acessados por um admin */
 public class RelatorioResource {
     @Autowired
     private RelatorioService relatorioService;

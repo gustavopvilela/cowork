@@ -28,16 +28,16 @@ public class AvaliacaoResource {
 
     @PostMapping("/reserva/{id}/avaliar")
     @Operation(
-            summary = "Insere uma avaliação para uma reserva concluída",
-            description = "Quando uma reserva for concluída, o usuário que reservou tem a opção de deixar uma avaliação.",
-            responses = {
-                    @ApiResponse(description = "Created", responseCode = "201"),
-                    @ApiResponse(description = "Bad Request", responseCode = "400"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
-                    @ApiResponse(description = "Forbidden", responseCode = "403"),
-                    @ApiResponse(description = "Not Found", responseCode = "404")
-            },
-            security = @SecurityRequirement(name = "bearerAuth")
+        summary = "Insere uma avaliação para uma reserva concluída",
+        description = "Quando uma reserva for concluída, o usuário que reservou tem a opção de deixar uma avaliação.",
+        responses = {
+            @ApiResponse(description = "Created", responseCode = "201"),
+            @ApiResponse(description = "Bad Request", responseCode = "400"),
+            @ApiResponse(description = "Unauthorized", responseCode = "401"),
+            @ApiResponse(description = "Forbidden", responseCode = "403"),
+            @ApiResponse(description = "Not Found", responseCode = "404")
+        },
+        security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<AvaliacaoDTO> insert (@PathVariable Long id, @Valid @RequestBody AvaliacaoInsertDTO dto) {

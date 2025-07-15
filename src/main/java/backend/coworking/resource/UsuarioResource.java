@@ -139,15 +139,15 @@ public class UsuarioResource {
 
     @GetMapping(value = "/me", produces = "application/json")
     @Operation(
-            summary = "Retorna o usuário autenticado",
-            description = "A partir do username (email) do usuário que está autenticado, seus dados são retornados para visualização",
-            responses = {
-                    @ApiResponse(description = "OK", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
-                    @ApiResponse(description = "Forbidden", responseCode = "403"),
-                    @ApiResponse(description = "Not Found", responseCode = "404")
-            },
-            security = @SecurityRequirement(name = "bearerAuth")
+        summary = "Retorna o usuário autenticado",
+        description = "A partir do username (email) do usuário que está autenticado, seus dados são retornados para visualização",
+        responses = {
+            @ApiResponse(description = "OK", responseCode = "200"),
+            @ApiResponse(description = "Unauthorized", responseCode = "401"),
+            @ApiResponse(description = "Forbidden", responseCode = "403"),
+            @ApiResponse(description = "Not Found", responseCode = "404")
+        },
+        security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<UsuarioDTO> getMe () {

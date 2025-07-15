@@ -120,14 +120,14 @@ public class EspacoResource {
 
     @GetMapping("/disponibilidade")
     @Operation(
-            summary = "Busca espaços disponíveis",
-            description = "Retorna uma lista de espaços que estão livres em um determinado período de tempo",
-            responses = {
-                    @ApiResponse(description = "OK", responseCode = "200"),
-                    @ApiResponse(description = "Bad Request", responseCode = "400"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401")
-            },
-            security = @SecurityRequirement(name = "bearerAuth")
+        summary = "Busca espaços disponíveis",
+        description = "Retorna uma lista de espaços que estão livres em um determinado período de tempo",
+        responses = {
+            @ApiResponse(description = "OK", responseCode = "200"),
+            @ApiResponse(description = "Bad Request", responseCode = "400"),
+            @ApiResponse(description = "Unauthorized", responseCode = "401")
+        },
+        security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<List<EspacoDTO>> findDisponibilidade (

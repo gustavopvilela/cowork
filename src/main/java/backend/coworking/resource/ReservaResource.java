@@ -123,15 +123,15 @@ public class ReservaResource {
 
     @GetMapping("/me")
     @Operation(
-            summary = "Retorna as reservas do usuário logado",
-            description = "Tendo os dados do usuário logado, retorna todas as suas reservas",
-            responses = {
-                    @ApiResponse(description = "OK", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
-                    @ApiResponse(description = "Forbidden", responseCode = "403"),
-                    @ApiResponse(description = "Not Found", responseCode = "404")
-            },
-            security = @SecurityRequirement(name = "bearerAuth")
+        summary = "Retorna as reservas do usuário logado",
+        description = "Tendo os dados do usuário logado, retorna todas as suas reservas",
+        responses = {
+                @ApiResponse(description = "OK", responseCode = "200"),
+                @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                @ApiResponse(description = "Forbidden", responseCode = "403"),
+                @ApiResponse(description = "Not Found", responseCode = "404")
+        },
+        security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_PROFISSIONAL')")
     public ResponseEntity<Page<ReservaDTO>> encontrarMinhasReservas (Pageable pageable) {
@@ -141,13 +141,13 @@ public class ReservaResource {
 
     @PostMapping("/cancelar-por-periodo")
     @Operation(
-            summary = "Cancela reservas em lote",
-            description = "Cancela todas as reservas dentro de um período específico",
-            responses = {
-                    @ApiResponse(description = "OK", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
-                    @ApiResponse(description = "Forbidden", responseCode = "403")
-            },
+        summary = "Cancela reservas em lote",
+        description = "Cancela todas as reservas dentro de um período específico",
+        responses = {
+            @ApiResponse(description = "OK", responseCode = "200"),
+            @ApiResponse(description = "Unauthorized", responseCode = "401"),
+            @ApiResponse(description = "Forbidden", responseCode = "403")
+        },
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")

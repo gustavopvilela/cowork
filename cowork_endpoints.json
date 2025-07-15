@@ -1,0 +1,1207 @@
+{
+	"info": {
+		"_postman_id": "f245d25a-37f1-4501-87e9-6c8db19960a3",
+		"name": "CoWork",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43508162",
+		"_collection_link": "https://gustavo-5643737.postman.co/workspace/Gustavo's-Workspace~44417f0a-82e0-49ab-8e3c-29a2e6928ce0/collection/43508162-f245d25a-37f1-4501-87e9-6c8db19960a3?action=share&source=collection_link&creator=43508162"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code >= 200 && pm.response.code < 300) {\r",
+									"    var json = JSON.parse(pm.response.text());\r",
+									"    postman.setEnvironmentVariable('token', json.access_token);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{client-id}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{client-secret}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/oauth2/token",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign up",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Anna\",\r\n    \"cargo\": \"Auxiliar administrativa\",\r\n    \"email\": \"anna@anna.com\",\r\n    \"telefone\": \"37998765432\",\r\n    \"senha\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/usuario/signup",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuario",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuário",
+			"item": [
+				{
+					"name": "Get all users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/usuario",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/usuario/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuario",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Fulano de tal\",\r\n    \"email\": \"gustavohp.vilela@gmail.com\",\r\n    \"senha\": \"jj\",\r\n    \"login\": \"gustavo\",\r\n    \"telefone\": \"37998765432\",\r\n    \"roles\": [\r\n        {\r\n            \"id\": 1,\r\n            \"authority\": \"ROLE_ADMIN\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/usuario",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuario"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Gustavo\",\r\n    \"email\": \"gustavohp.vilela@gmail.com\",\r\n    \"senha\": \"12345678\",\r\n    \"login\": \"gustavo\",\r\n    \"telefone\": \"37998765432\",\r\n    \"roles\": [\r\n        {\r\n            \"id\": 1,\r\n            \"authority\": \"ADMIN\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/usuario/4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuario",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/usuario/4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuario",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by e-mail",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/usuario/email/admin@admin.com",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuario",
+								"email",
+								"admin@admin.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/usuario/me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuario",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reserva",
+			"item": [
+				{
+					"name": "Get all reservas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/reserva",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reserva"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get reserva by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/reserva/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reserva",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert reserva",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrada\": \"2024-11-01T09:00:00Z\",\r\n    \"saida\": \"2024-11-01T18:00:00Z\",\r\n    \"usuarioId\": 1,\r\n    \"espacoId\": 1,\r\n    \"servicoId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/reserva",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reserva"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update reserva",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"entrada\": \"2024-11-01T10:00:00Z\",\r\n    \"saida\": \"2024-11-01T19:00:00Z\",\r\n    \"usuarioId\": 1,\r\n    \"espacoId\": 1,\r\n    \"servicoId\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/reserva/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reserva",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete reserva",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/reserva/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reserva",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancelar reservas em lote",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"inicio\": \"2024-08-06T09:00:00Z\",\r\n    \"fim\": \"2024-08-23T12:00:00Z\",\r\n    \"motivo\": \"Reestruturação das salas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/reserva/cancelar-por-periodo",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reserva",
+								"cancelar-por-periodo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get minhas reservas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/reserva/me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reserva",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Serviço",
+			"item": [
+				{
+					"name": "Get all serviços",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/servico",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"servico"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get serviço by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/servico/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"servico",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert serviço",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Novo Serviço\",\r\n    \"descricao\": \"Descrição do novo serviço\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/servico",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"servico"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update serviço",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Serviço Atualizado\",\r\n    \"descricao\": \"Descrição do serviço atualizado\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/servico/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"servico",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete serviço",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/servico/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"servico",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Espaço",
+			"item": [
+				{
+					"name": "Get all espaços",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/espaco",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"espaco"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get espaço by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/espaco/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"espaco",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert espaço",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Novo Espaço\",\r\n    \"descricao\": \"Descrição do novo espaço\",\r\n    \"tipo\": \"MESA_INDIVIDUAL\",\r\n    \"capacidade\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/espaco",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"espaco"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update espaço",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Espaço Atualizado\",\r\n    \"descricao\": \"Descrição do espaço atualizado\",\r\n    \"tipo\": \"SALA_REUNIAO\",\r\n    \"capacidade\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/espaco/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"espaco",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete espaço",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/espaco/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"espaco",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Espaços disponíveis",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/espaco/disponibilidade?inicio=2024-07-29T09:00:00Z&fim=2024-08-18T12:00:00Z&tipo=CABINE_PARA_CHAMADAS&capacidade=1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"espaco",
+								"disponibilidade"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2024-07-29T09:00:00Z",
+									"description": "Data e hora de início para a reserva planejada"
+								},
+								{
+									"key": "fim",
+									"value": "2024-08-18T12:00:00Z",
+									"description": "Data e hora de fim para a reserva planejada"
+								},
+								{
+									"key": "tipo",
+									"value": "CABINE_PARA_CHAMADAS",
+									"description": "(NULLABLE) Tipo do espaço que se deseja reservar"
+								},
+								{
+									"key": "capacidade",
+									"value": "1",
+									"description": "(NULLABLE) Capacidade desejada do espaço"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Relatórios",
+			"item": [
+				{
+					"name": "Top serviços",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/relatorio/servicos/top",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"relatorio",
+								"servicos",
+								"top"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Taxa de ocupação no mês",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/relatorio/ocupacao?ano=2024&mes=8",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"relatorio",
+								"ocupacao"
+							],
+							"query": [
+								{
+									"key": "ano",
+									"value": "2024",
+									"description": "Ano"
+								},
+								{
+									"key": "mes",
+									"value": "8",
+									"description": "Mês"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Avaliação",
+			"item": [
+				{
+					"name": "Get avaliações por espaço",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/espaco/6/avaliacoes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"espaco",
+								"6",
+								"avaliacoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert avaliação",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nota\": 1,\r\n    \"comentario\": \"Amei, uma estrela.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/reserva/50/avaliar",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reserva",
+								"50",
+								"avaliar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Minhas avaliações",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/avaliacao/me",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"avaliacao",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get avaliações de usuário",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/usuario/7/avaliacoes",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"usuario",
+								"7",
+								"avaliacoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get stats do espaço",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/espaco/2/avaliacoes/status",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"espaco",
+								"2",
+								"avaliacoes",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete avaliação",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/avaliacao/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"avaliacao",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update avaliacao",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nota\": 4,\r\n    \"comentario\": \"Amei!!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/avaliacao/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"avaliacao",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
