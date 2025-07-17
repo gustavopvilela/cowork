@@ -154,4 +154,27 @@ public class UsuarioResource {
         UsuarioDTO usuario = usuarioService.getMe();
         return ResponseEntity.ok().body(usuario);
     }
+
+    @PostMapping(value = "/signup", produces = "application/json")
+    @Operation(
+        description = "O usuário não autenticado, o profissional, pode criar uma nova conta no sistema, sem a necessidade de um administrador fazê-lo.",
+        summary = "Cria uma nova conta de profissional",
+        responses = {
+            @ApiResponse(description = "Created", responseCode = "201"),
+            @ApiResponse(description = "Bad Request", responseCode = "400"),
+            @ApiResponse(description = "Unprocessable Entity", responseCode = "402")
+        }
+
+    )
+    public ResponseEntity<UsuarioDTO> signUp (@Valid @RequestBody UsuarioInsertDTO dto) {
+        UsuarioDTO usuario = usuarioService.signUp(dto);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(usuario.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(usuario);
+    }
 }

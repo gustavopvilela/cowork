@@ -140,6 +140,21 @@ public class UsuarioService implements UserDetailsService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return findByEmail(username);
     }
+
+    @Transactional
+    public UsuarioDTO signUp (UsuarioInsertDTO dto) {
+        Usuario entity = new Usuario();
+        this.copiarDTOParaEntidade(dto, entity);
+
+        Role role = roleRepository.findByAuthority("ROLE_PROFISSIONAL");
+
+        entity.getRoles().clear();
+        entity.getRoles().add(role);
+        entity.setSenha(passwordEncoder.encode(dto.getSenha()));
+
+        Usuario novo = usuarioRepository.save(entity);
+        return new UsuarioDTO(novo);
+    }
     
     private void copiarDTOParaEntidade (UsuarioDTO dto, Usuario entity) {
         entity.setNome(dto.getNome());
